@@ -3,6 +3,10 @@
 #include <DirectXMath.h>
 #include <vector>
 #include <DirectXTex.h>
+#include <Windows.h>
+#include <wrl.h>
+#include <d3d12.h>
+#include <d3dx12.h>
 
 struct Node
 {
@@ -28,6 +32,20 @@ public:
 	// フレンドクラス
 	friend class FbxLoader;
 
+private:	// エイリアス
+	// Microsoft::WRL::を省略
+	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
+	// DirectX::を省略
+	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+	using XMFLOAT4 = DirectX::XMFLOAT4;
+	using XMMATRIX = DirectX::XMMATRIX;
+	using TexMetadata = DirectX::TexMetadata;
+	using ScrachImage = DirectX::ScratchImage;
+	// std::を省略
+	using string = std::string;
+	template <class T>using vector = std::vector<T>;
+
 public:	// サブクラス
 	// 頂点データ構造体
 	struct VertexPosNormalUv
@@ -36,6 +54,13 @@ public:	// サブクラス
 		DirectX::XMFLOAT3 normal;	// 法線ベクトル
 		DirectX::XMFLOAT2 uv;		// uv座標
 	};
+
+	void CreateBuffers(ID3D12Device* device);
+
+	// 描画
+	void Draw(ID3D12GraphicsCommandList* cmdList);
+	// モデルの変形行列
+	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
 
 private:
 	// モデル名
@@ -47,14 +72,26 @@ private:
 	// 頂点データ配列
 	std::vector<VertexPosNormalUv> vertices;
 	// 頂点インデックス配列
-	std::vector<unsigned short> indeices;
+	std::vector<unsigned short> indices;
 	// アンビエント係数
 	DirectX::XMFLOAT3 ambient = { 1,1,1 };
 	// ディフューズ係数
 	DirectX::XMFLOAT3 diffuse = { 1,1,1 };
 	// テクスチャメタデータ
-	DirectX::TexMetadata matadata = {};
+	DirectX::TexMetadata metadata = {};
 	// スクラッチイメージ
 	DirectX::ScratchImage scrachImg = {};
+	// 頂点バッファ
+	ComPtr<ID3D12Resource> vertBuff = nullptr;
+	// インデックスバッファ
+	ComPtr<ID3D12Resource> indexBuff = nullptr;
+	// テクスチャバッファ
+	ComPtr<ID3D12Resource> texbuff = nullptr;
+	// 頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	// インデックスバッファビュー
+	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	// SRV用デスクリプターヒープ
+	ComPtr<ID3D12DescriptorHeap> descHeapSRV = nullptr;
 };
 
