@@ -75,6 +75,9 @@ void FbxLoader::LoadModelFromFile(const string& modelName)
 
 	// FBXScene開放
 	fbxScene->Destroy();
+
+	// バッファ生成
+	model->CreateBuffers(device_);
 }
 
 void FbxLoader::ParseNodeRecursive(Model* model, FbxNode* fbxNode, Node* parent)
@@ -181,7 +184,7 @@ void FbxLoader::ParseMeshVertices(Model* model, FbxMesh* fbxMesh)
 void FbxLoader::ParseMeshFaces(Model* model, FbxMesh* fbxMesh)
 {
 	auto& vertices = model->vertices;
-	auto& indices = model->indeices;
+	auto& indices = model->indices;
 
 	// 1ファイルに複数メッシュのモデルは非対応
 	assert(indices.size() == 0);
@@ -301,7 +304,7 @@ void FbxLoader::LoadTexture(Model* model, const std::string& fullpath)
 {
 	HRESULT result = S_FALSE;
 	// WICテクスチャのロード
-	TexMetadata& metadata = model->matadata;
+	TexMetadata& metadata = model->metadata;
 	ScratchImage& scratchImg = model->scrachImg;
 	// ユニコード文字列に変換
 	wchar_t wfilepath[128];
