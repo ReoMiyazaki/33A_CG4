@@ -6,11 +6,25 @@ void Model::CreateBuffers(ID3D12Device* device)
 	// 頂点データ全体のサイズ
 	UINT sizeVB =
 		static_cast<UINT>(sizeof(VertexPosNormalUv) * vertices.size());
+
+	// 頂点バッファの設定
+	D3D12_HEAP_PROPERTIES heapprop{};	// ヒープ設定
+	heapprop.Type = D3D12_HEAP_TYPE_UPLOAD;	// GPUへの転送用
+
+	D3D12_RESOURCE_DESC resdesc{};	// リソース設定
+	resdesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resdesc.Width = sizeVB;
+	resdesc.Height = 1;
+	resdesc.DepthOrArraySize = 1;
+	resdesc.MipLevels = 1;
+	resdesc.SampleDesc.Count = 1;
+	resdesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
 	// 頂点バッファ生成
 	result = device->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		&heapprop,
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
+		&resdesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&vertBuff));
@@ -109,4 +123,17 @@ void Model::CreateBuffers(ID3D12Device* device)
 
 void Model::Draw(ID3D12GraphicsCommandList* cmdList)
 {
+	// 頂点バッファをセット(VBV)
+	cmdList->IASetVertexBuffers(0, 1, &vbView);
+	// インデックスバッファをセット(IBV)
+	cmdList->IASetIndexBuffer(&ibView);
+
+	// デスクリプターヒープのセット
+	ID3D12DescriptorHeap* ppHeaps[] = { descHeapSRV.Get() };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	// シェーダリソースビューをセット
+	cmdList->SetGraphicsRootDescriptorTable(1, descHeapSRV->GetGPUDescriptorHandleForHeapStart());
+
+	// 描画コマンド
+	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }
