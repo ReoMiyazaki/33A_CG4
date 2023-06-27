@@ -66,8 +66,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio * audio)
 	lightGroup = LightGroup::Create();
 
 	// カメラ注視点をセット
-	camera->SetTarget({0, 1, 0});
-	camera->SetDistance(3.0f);
+	camera->SetTarget({0, 20, 0});
+	camera->SetDistance(100.0f);
 
 	// モデル名を指定してファイル読み込み
 	//FbxLoader::GetInstance()->LoadModelFromFile("cube");

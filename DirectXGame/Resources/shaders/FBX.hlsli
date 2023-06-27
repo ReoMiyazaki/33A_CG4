@@ -8,7 +8,7 @@ cbuffer cbuff0 : register(b0)
 // バーテックスバッファーの入力
 struct VSInput
 {
-    float4 pos : POSITIONT; // 位置
+    float4 pos : POSITION; // 位置
     float3 normal : NORMAL; // 頂点法線
     float2 uv : TEXCOORD;   // テクスチャー座標
 };
