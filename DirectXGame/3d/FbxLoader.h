@@ -24,6 +24,12 @@ public:
 	/// <returns>インスタンス</returns>
 	static FbxLoader* GetInstance();
 	/// <summary>
+	/// FBX
+	/// </summary>
+	/// <param name="dst"></param>
+	/// <param name="src"></param>
+	static void ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& src);
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="device">D3D12デバイス</param>
@@ -60,6 +66,9 @@ public:
 	void LoadTexture(Model* model, const std::string& fulloath);
 	// ディレクトリを含んだファイルパスからファイル名を抽出する
 	std::string ExtractFileName(const std::string& path);
+	// スキニング情報の読み取り
+	void ParseSkin(Model* model, FbxMesh* fbxMesh);
+
 private:
 	// privateなコンストラクタ（シングルトンパターン）
 	FbxLoader() = default;

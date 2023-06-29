@@ -77,8 +77,8 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int)
 		dxCommon->PostDraw();
 	}
 	// 各種解放
-	FbxLoader::GetInstance()->Finalize();
 	safe_delete(gameScene);
+	FbxLoader::GetInstance()->Finalize();
 	safe_delete(audio);
 	safe_delete(dxCommon);
 

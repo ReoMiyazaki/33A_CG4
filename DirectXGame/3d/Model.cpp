@@ -1,11 +1,17 @@
 #include "Model.h"
 
+Model::~Model()
+{
+	// FBXシーンの開放
+	fbxScene->Destroy();
+}
+
 void Model::CreateBuffers(ID3D12Device* device)
 {
 	HRESULT result;
 	// 頂点データ全体のサイズ
 	UINT sizeVB =
-		static_cast<UINT>(sizeof(VertexPosNormalUv) * vertices.size());
+		static_cast<UINT>(sizeof(VertexPosNormalUvSkin) * vertices.size());
 
 	// 頂点バッファの設定
 	D3D12_HEAP_PROPERTIES heapprop{};	// ヒープ設定
@@ -30,7 +36,7 @@ void Model::CreateBuffers(ID3D12Device* device)
 		IID_PPV_ARGS(&vertBuff));
 
 	// 頂点バッファへのデータ転送
-	VertexPosNormalUv* vertMap = nullptr;
+	VertexPosNormalUvSkin* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		std::copy(vertices.begin(), vertices.end(), vertMap);
