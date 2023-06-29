@@ -74,21 +74,7 @@ Model* FbxLoader::LoadModelFromFile(const string& modelName)
 
 	// ファイルからロードしたFBXの情報をシーンにインポート
 	fbxImporter_->Import(fbxScene);
-	// ボーン構造体
-struct Bone
-{
-	// 名前
-	std::string name;
-	// 初期姿勢の逆行列
-	DirectX::XMMATRIX invInitialPose;
-	// クラスター(FBX側のボーン情報)
-	FbxCluster* fbxCluster;
-	// コンストラクタ
-	Bone(const std::string& name)
-	{
-		this->name = name;
-	}
-};
+
 	// モデル生成
 	Model* model = new Model();
 	model->name = modelName;
