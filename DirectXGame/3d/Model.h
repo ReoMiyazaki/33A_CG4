@@ -29,25 +29,6 @@ struct Node
 
 class Model
 {
-	// ボーン構造体
-	struct Bone
-	{
-		// 名前
-		std::string name;
-		// 初期姿勢の逆行列
-		DirectX::XMMATRIX invInitialPose;
-		// クラスター(FBX側のボーン情報)
-		FbxCluster* fbxCluster;
-		// コンストラクタ
-		Bone(const std::string& name)
-		{
-			this->name = name;
-		}
-	};
-public:
-	// フレンドクラス
-	friend class FbxLoader;
-
 private:	// エイリアス
 	// Microsoft::WRL::を省略
 	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -76,6 +57,25 @@ public:	// サブクラス
 		UINT boneIndex[MAX_BONE_INDICES];	// ボーン 番号
 		float boneWeight[MAX_BONE_INDICES];	// ボーン 重み
 	};
+	// ボーン構造体
+	struct Bone
+	{
+		// 名前
+		std::string name;
+		// 初期姿勢の逆行列
+		DirectX::XMMATRIX invInitialPose;
+		// クラスター(FBX側のボーン情報)
+		FbxCluster* fbxCluster;
+		// コンストラクタ
+		Bone(const std::string& name)
+		{
+			this->name = name;
+		}
+	};
+
+public:
+	// フレンドクラス
+	friend class FbxLoader;
 
 	// デストラクタ
 	~Model();
@@ -84,6 +84,10 @@ public:	// サブクラス
 	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	// getter
+	std::vector<Bone>& GetBones() { return bones; }
+	// getter
+	FbxScene* GetFbxScene() { return fbxScene; }
 
 private:
 	// モデル名
@@ -118,11 +122,7 @@ private:
 	ComPtr<ID3D12DescriptorHeap> descHeapSRV = nullptr;
 	// ボーン配列
 	std::vector<Bone> bones;
-	// getter
-	std::vector<Bone>& GetBones() { return bones; }
 	// FBXシーン
 	FbxScene* fbxScene = nullptr;
-	// getter
-	FbxScene* GetFbxScene() { return fbxScene; }
 };
 
