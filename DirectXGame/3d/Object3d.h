@@ -84,6 +84,15 @@ public:	// メンバ関数
 	/// </summary>
 	static void CreateGraphicsPipeline();
 
+	// getter
+	const XMFLOAT3& GetScale() const { return scale; }
+	const XMFLOAT3& GetPosition() const { return position; }
+	const XMFLOAT3& GetRotation() const { return rotation; }
+	// setter
+	void SetScale(const XMFLOAT3& scale) { this->scale = scale; }
+	void SetPosition(const XMFLOAT3& position) { this->position = position; }
+	void SetRotation(const XMFLOAT3& rotation) { this->rotation = rotation; }
+
 protected: // メンバ変数
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuffTransform;
