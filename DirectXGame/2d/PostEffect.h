@@ -43,7 +43,7 @@ private:
 
 private: // メンバ変数
 	// テクスチャバッファ
-	ComPtr<ID3D12Resource> texBuff;
+	ComPtr<ID3D12Resource> texBuff[2];
 	// SRVデスクリプターヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 	// 深度バッファ
